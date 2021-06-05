@@ -95,9 +95,9 @@ public final class Main {
                 System.out.println("The first parameter should be a natural number or zero.");
                 continue;
             }
-            final var naturalNumber = new NaturalNumber(request[0]);
+            final var number = new NaturalNumber(request[0]);
             if (request.length == 1) {
-                naturalNumber.printCard();
+                number.printCard();
                 continue;
             }
             if (notNatural(request[1])) {
@@ -122,12 +122,11 @@ public final class Main {
                 System.out.println("There are no numbers with these properties.");
                 continue;
             }
-            while (count > 0) {
-                if (naturalNumber.hasProperties(query)) {
-                    naturalNumber.printLine();
+            for (; count > 0; number.increase()) {
+                if (number.hasProperties(query)) {
+                    number.printLine();
                     count--;
                 }
-                naturalNumber.increment();
             }
         }
     }
@@ -140,121 +139,4 @@ public final class Main {
         return input.split(" ", 3);
     }
 
-}
-
-class NaturalNumber {
-
-    private String digits;
-    private long number;
-
-    NaturalNumber(final String value) {
-        digits = value;
-        number = Long.parseLong(value);
-    }
-
-    NaturalNumber(final long value) {
-        digits = String.valueOf(value);
-        number = value;
-    }
-
-    static long numSquareSum(long n) {
-        long squareSum = 0;
-        for (long i = n; i != 0; i /= 10) {
-            squareSum += (i % 10) * (i % 10);
-        }
-        return squareSum;
-    }
-
-    void printCard() {
-        System.out.printf("Properties of %,d%n", number);
-        for (var property : Main.PROPERTIES) {
-            final var hasProperty = test(property);
-            System.out.printf("%12s: %s%n", property, hasProperty);
-        }
-    }
-
-    void printLine() {
-        final var properties = new StringJoiner(", ");
-        for (var property : Main.PROPERTIES) {
-            if (test(property)) {
-                properties.add(property);
-            }
-        }
-        System.out.printf("%,12d is %s%n", number, properties);
-    }
-
-    private boolean test(final String property) {
-        switch (property) {
-            case "even":
-                return number % 2 == 0;
-            case "odd":
-                return number % 2 != 0;
-            case "buzz":
-                return number % 7 == 0 || number % 10 == 7;
-            case "duck":
-                return digits.indexOf('0') != -1;
-            case "palindromic":
-                return new StringBuilder(digits).reverse().toString().equals(digits);
-            case "gapful":
-                final var divider = (digits.charAt(0) - '0') * 10 + number % 10;
-                return number > 100 && number % divider == 0;
-            case "spy":
-                long sum = 0, product = 1;
-                for (long rest = number; rest > 0; rest /= 10) {
-                    long digit = rest % 10;
-                    product *= digit;
-                    if (product == 0) {
-                        return false;
-                    }
-                    sum += digit;
-                }
-                return sum == product;
-            case "square":
-                return (long) Math.pow((long) Math.sqrt(number), 2) == number;
-            case "sunny":
-                return new NaturalNumber(number + 1).test("square");
-            case "jumping":
-                for (long p = number % 10, rest = number / 10; rest > 0; rest /= 10) {
-                    long c = rest % 10;
-                    long d = p - c;
-                    if (d != 1 && d != -1) {
-                        return false;
-                    }
-                    p = c;
-                }
-                return true;
-            case "happy":
-                return isHappyNumber();
-            case "sad":
-                return !isHappyNumber();
-        }
-        return false;
-    }
-
-    void increment() {
-        number++;
-        digits = String.valueOf(number);
-    }
-
-    boolean hasProperties(String[] query) {
-        for (var property : query) {
-            final var isNegative = property.charAt(0) == '-';
-            if (isNegative ? test(property.substring(1)) : !test(property)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean isHappyNumber() {
-        long slow = number;
-        long fast = number;
-        do {
-            slow = numSquareSum(slow);
-            fast = numSquareSum(numSquareSum(fast));
-        }
-        while (slow != fast);
-
-        return slow == 1;
-    }
 }
