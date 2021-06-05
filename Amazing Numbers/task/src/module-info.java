@@ -4,4 +4,6 @@
 
 module rabestro.numbers {
     exports numbers;
+    exports numbers.natural;
+    exports numbers.properties;
 }

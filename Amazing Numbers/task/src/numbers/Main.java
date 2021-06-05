@@ -7,6 +7,10 @@ import java.util.Scanner;
 import java.util.StringJoiner;
 
 public final class Main {
+    static final String[] PROPERTIES = new String[]{
+            "even", "odd", "buzz", "duck", "palindromic", "gapful",
+            "spy", "square", "sunny", "jumping", "happy", "sad"
+    };
     private static final String HELP = String.join("\n ",
             "Supported requests:",
             "- enter a natural number to know its properties;",
@@ -19,10 +23,6 @@ public final class Main {
             "- separate the parameters with one space;",
             "- enter 0 to exit."
     );
-    static final String[] PROPERTIES = new String[]{
-            "even", "odd", "buzz", "duck", "palindromic", "gapful",
-            "spy", "square", "sunny", "jumping", "happy", "sad"
-    };
     private static final String[][] EXCLUSIVE = new String[][]{
             {"even", "odd"}, {"spy", "duck"}, {"sunny", "square"}, {"happy", "sad"},
             {"-even", "-odd"}, {"-happy", "-sad"}
